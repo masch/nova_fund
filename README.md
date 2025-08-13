@@ -227,40 +227,66 @@ Este contrato fue desarrollado exclusivamente con fines educativos dentro del co
 
 # Get admin : stellar keys address admin
 
-cargo clean && cargo build --target wasm32v1-none --release && stellar contract optimize --wasm target/wasm32v1-none/
-release/baf_crowdfunding_contract.wasm
+cargo clean && cargo build --target wasm32v1-none --release && stellar contract optimize --wasm target/wasm32v1-none/release/baf_crowdfunding_contract.wasm
+
+cargo build --target wasm32v1-none --release && stellar contract optimize --wasm target/wasm32v1-none/release/baf_crowdfunding_contract.wasm
+
+stellar keys generate alice-contributor --network testnet --fund
+stellar keys address alice-contributor => GALX2CBQFDKI32QJMTKLNZSQXR4DX7CEG5DTDGJBLCFEAXQUXM4RKXQZ
+
+stellar keys generate alice-beneficiary --network testnet --fund
+stellar keys address alice-beneficiary => GDIVVKR333DKTSFGGJYIG37VMZCK2OOURUBYYQKK7MVGDL5N2JXO2JFT
+
+stellar contract alias show contract_address
 
     stellar contract deploy \
         --wasm target/wasm32v1-none/release/baf_crowdfunding_contract.optimized.wasm \
+        --alias contract_address \
         --source admin \
         --network testnet \
         -- \
         --admin GCISVJIR6CT6VVYN7AJ5AXMHNPZZMZI4U3CELHYXQW77X4E42AUHC7AM \
-        --token GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5
+        --token CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC
 
 
     stellar contract invoke \
-        --id CCB7V5EMYRMSD54LK2SGBSTLUNQS5ECMT2DCG4YVW3GKDMZ3NAUTOKWC \
+        --id contract_address \
         --source admin \
         --network testnet \
         -- create_campaign \
         --creator GCISVJIR6CT6VVYN7AJ5AXMHNPZZMZI4U3CELHYXQW77X4E42AUHC7AM \
-        --beneficiary GCISVJIR6CT6VVYN7AJ5AXMHNPZZMZI4U3CELHYXQW77X4E42AUHC7AM \
+        --beneficiary GDIVVKR333DKTSFGGJYIG37VMZCK2OOURUBYYQKK7MVGDL5N2JXO2JFT \
         --goal 100000000 \
         --min_donation 100000
 
     stellar contract invoke \
-        --id CCB7V5EMYRMSD54LK2SGBSTLUNQS5ECMT2DCG4YVW3GKDMZ3NAUTOKWC \
+        --id contract_address \
         --source admin \
         --network testnet \
         -- get_campaign \
-        --campaign_id 0
+        --campaign_id 1
 
     stellar contract invoke \
-        --id CCB7V5EMYRMSD54LK2SGBSTLUNQS5ECMT2DCG4YVW3GKDMZ3NAUTOKWC \
-        --source admin \
+        --id contract_address \
+        --source alice-contributor \
         --network testnet \
         -- contribute \
-        --contributor GCISVJIR6CT6VVYN7AJ5AXMHNPZZMZI4U3CELHYXQW77X4E42AUHC7AM \
+        --contributor GALX2CBQFDKI32QJMTKLNZSQXR4DX7CEG5DTDGJBLCFEAXQUXM4RKXQZ \
         --campaign_id 0 \
-        --amount 100
+        --amount 100000000
+
+    stellar contract invoke \
+        --id contract_address \
+        --source alice-contributor \
+        --network testnet \
+        -- refund \
+        --contributor GALX2CBQFDKI32QJMTKLNZSQXR4DX7CEG5DTDGJBLCFEAXQUXM4RKXQZ \
+        --campaign_id 0
+
+
+    stellar contract invoke \
+        --id contract_address \
+        --source alice-beneficiary \
+        --network testnet \
+        -- withdraw \
+        --campaign_id 0

@@ -1,6 +1,6 @@
-use soroban_sdk::{ Env, Vec};
+use soroban_sdk::{Env, Vec};
 
-use crate::{ storage::{structs::campaign::Campaign, types::error::Error}};
+use crate::storage::{structs::campaign::Campaign, types::error::Error};
 
 use super::types::storage::DataKey;
 
@@ -9,7 +9,6 @@ use super::types::storage::DataKey;
 
 //     env.storage().instance().has(&key)
 // }
-
 
 pub(crate) fn new_campaign(env: &Env, campaign: &Campaign) {
     let storage = env.storage().persistent();
@@ -31,9 +30,9 @@ pub(crate) fn set_campaign(env: &Env, campaign: Campaign) {
     storage.set(&DataKey::Campaigns, &current_campaign);
 }
 
-pub(crate) fn get_campaign(env: &Env, id: u32) ->  Result<Campaign, Error> {
+pub(crate) fn get_campaign(env: &Env, id: u32) -> Result<Campaign, Error> {
     let storage = env.storage().persistent();
-    
+
     // 1. Get the vector of campaigns. This returns an Option<Vec<Campaign>>.
     let campaigns_vec = storage
         .get::<DataKey, Vec<Campaign>>(&DataKey::Campaigns)
@@ -49,20 +48,22 @@ pub(crate) fn get_campaign(env: &Env, id: u32) ->  Result<Campaign, Error> {
         .ok_or(Error::CampaignNotFound)
 }
 
- pub(crate) fn remove_campaign(env: &Env, campaign_id: u32) {
-    let storage = env.storage().persistent();
-    let mut current_campaign = storage
-        .get::<DataKey, Vec<Campaign>>(&DataKey::Campaigns)
-        .unwrap_or_else(|| Vec::new(&env)); // If key doesn't exist, start with an empty Vec
+//  pub(crate) fn remove_campaign(env: &Env, campaign_id: u32) {
+//     let storage = env.storage().persistent();
+//     let mut current_campaign = storage
+//         .get::<DataKey, Vec<Campaign>>(&DataKey::Campaigns)
+//         .unwrap_or_else(|| Vec::new(&env)); // If key doesn't exist, start with an empty Vec
 
-    current_campaign.remove(campaign_id);
-    storage.set(&DataKey::Campaigns, &current_campaign);
- }
+//     current_campaign.remove(campaign_id);
+//     storage.set(&DataKey::Campaigns, &current_campaign);
+//  }
 
 pub(crate) fn get_and_increment_next_id(env: &Env) -> u32 {
     let current_id: u32 = env.storage().instance().get(&DataKey::NextID).unwrap_or(0);
 
-    env.storage().instance().set(&DataKey::NextID, &(current_id + 1));
+    env.storage()
+        .instance()
+        .set(&DataKey::NextID, &(current_id + 1));
 
     current_id
 }
