@@ -225,6 +225,8 @@ enum Errors {
 
 Este contrato fue desarrollado exclusivamente con fines educativos dentro del contexto del bootcamp, sirviendo como una base práctica para entender los conceptos fundamentales de Soroban y el desarrollo de contratos inteligentes. No está diseñado ni recomendado para ser utilizado en entornos de producción sin antes pasar por una auditoría exhaustiva que garantice su seguridad y robustez. A lo largo del workshop, se profundizará en aspectos clave como la arquitectura del contrato, las mejores prácticas de seguridad y el manejo adecuado de estados, para que los participantes puedan construir soluciones más confiables y escalables.
 
+# Get admin : stellar keys address admin
+
 cargo clean && cargo build --target wasm32v1-none --release && stellar contract optimize --wasm target/wasm32v1-none/
 release/baf_crowdfunding_contract.wasm
 
@@ -238,7 +240,7 @@ release/baf_crowdfunding_contract.wasm
 
 
     stellar contract invoke \
-        --id CCQWS4BQRVSQ6ZV7MGLQZIEQDWL5UKZQWALFAVCK64ZFQWX4A37MV43K \
+        --id CCB7V5EMYRMSD54LK2SGBSTLUNQS5ECMT2DCG4YVW3GKDMZ3NAUTOKWC \
         --source admin \
         --network testnet \
         -- create_campaign \
@@ -248,10 +250,17 @@ release/baf_crowdfunding_contract.wasm
         --min_donation 100000
 
     stellar contract invoke \
-        --id CCQWS4BQRVSQ6ZV7MGLQZIEQDWL5UKZQWALFAVCK64ZFQWX4A37MV43K \
+        --id CCB7V5EMYRMSD54LK2SGBSTLUNQS5ECMT2DCG4YVW3GKDMZ3NAUTOKWC \
         --source admin \
         --network testnet \
         -- get_campaign \
         --campaign_id 0
 
-        creator: Address, beneficiary: Address, goal: i128, min_donation: i128
+    stellar contract invoke \
+        --id CCB7V5EMYRMSD54LK2SGBSTLUNQS5ECMT2DCG4YVW3GKDMZ3NAUTOKWC \
+        --source admin \
+        --network testnet \
+        -- contribute \
+        --contributor GCISVJIR6CT6VVYN7AJ5AXMHNPZZMZI4U3CELHYXQW77X4E42AUHC7AM \
+        --campaign_id 0 \
+        --amount 100
