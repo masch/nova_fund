@@ -1,30 +1,45 @@
-use soroban_sdk::{Address, Env};
+use soroban_sdk::{Address, Env, Map};
 
 use crate::{
     events,
     storage::{
-        admin::get_admin,  campaign::new_campaign, campaign::get_and_increment_next_id, structs::campaign::Campaign, types::{error::Error}
+        admin::get_admin, campaign::exist_campaign, campaign::new_campaign, ong::exist_ong,
+        ong::get_ong_by_address_and_increment_ong_campaigns, structs::campaign::Campaign,
+        types::error::Error,
     },
 };
 
-pub fn add_campaign(env: &Env, creator: Address, beneficiary: Address, goal: i128, min_donation: i128) -> Result<(), Error> {
-    let current_admin = get_admin(env);
-    current_admin.require_auth();
+pub fn add_campaign(
+    env: &Env,
+    creator: Address,
+    beneficiary: Address,
+    goal: i128,
+    min_donation: i128,
+) -> Result<(), Error> {
+    creator.require_auth(); // TODO: Chequear self para validar wihtelist
 
-    let id = get_and_increment_next_id(env);
+    if !exist_ong(env, creator.clone()) {
+        return Err(Error::OngCannotCreateCampaign);
+    }
 
-    let campaign = Campaign {
+    if exist_campaign(env, beneficiary.clone()) {
+        return Err(Error::CampaignAlreadyExists);
+    }
+
+    get_ong_by_address_and_increment_ong_campaigns(env, creator.clone())?;
+
+    let campaign: Campaign = Campaign {
         goal,
         min_donation,
         total_raised: 0,
         supporters: 0,
-        id,
+        // id: ong.total_campaigns,
         beneficiary,
         executed: false,
+        contributors: Map::new(env),
     };
 
-
-    new_campaign(&env, &campaign);
+    new_campaign(&env, campaign.clone());
     events::campaign::add_campaign(&env, campaign, &creator);
     Ok(())
 }

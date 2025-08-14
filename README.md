@@ -227,15 +227,38 @@ Este contrato fue desarrollado exclusivamente con fines educativos dentro del co
 
 # Get admin : stellar keys address admin
 
+G@E4H}3iXaucvjL
+
 cargo clean && cargo build --target wasm32v1-none --release && stellar contract optimize --wasm target/wasm32v1-none/release/baf_crowdfunding_contract.wasm
 
 cargo build --target wasm32v1-none --release && stellar contract optimize --wasm target/wasm32v1-none/release/baf_crowdfunding_contract.wasm
 
+stellar keys address admin => GCISVJIR6CT6VVYN7AJ5AXMHNPZZMZI4U3CELHYXQW77X4E42AUHC7AM
+stellar keys secret admin => SAD5I7SBUKVUJW5FNUAQSJBYWQBNQBUFJPFT3GKVAIO6CXOC434PBQ3O
+stellar keys secret admin --phrase => SAD5I7SBUKVUJW5FNUAQSJBYWQBNQBUFJPFT3GKVAIO6CXOC434PBQ3O audit dirt history olympic define post must orphan path salute orphan joke below cart blast extend exchange farm excite bonus steak almost deny noble
+
+stellar keys generate alice-ong-1 --network testnet --fund
+stellar keys address alice-ong-1 => GA76IHDYDMDZE3Q4PPY2YY64SCPYCTFJTWGHDH5LGHIROLV7WU6DFN7M
+stellar keys secret alice-ong-1 => SCFNSTKQPDDSQIFVY6S6XVILHB6DHDRKPMZVQXPZDGCES7SDDXYOCHOJ
+
+stellar keys generate alice-ong-2 --network testnet --fund
+stellar keys address alice-ong-2 => GB2IMTB3E3NTXC6PSAS2AY3NNQ2U32AUQVGSO4B6QSNXPJTQGSL7GBNU
+stellar keys secret alice-ong-2 => SBHVJENQ65UPKI56OA6UHIEU36FBGUPOGB3L3O3LWAUYCF2ACZ3IKXSI
+
 stellar keys generate alice-contributor --network testnet --fund
 stellar keys address alice-contributor => GALX2CBQFDKI32QJMTKLNZSQXR4DX7CEG5DTDGJBLCFEAXQUXM4RKXQZ
+stellar keys secret alice-contributor => SCYCNRP7W6L7EJT6SJ467DUC4OP7KMKMRYHQMOCXFICVHR7WDE77YNNK
+stellar keys secret alice-contributor --phrase => second shop kiss basket resource notice wait magnet pyramid engage voice aunt miracle sock card chase scrub title fish library admit language smoke sure
 
-stellar keys generate alice-beneficiary --network testnet --fund
-stellar keys address alice-beneficiary => GDIVVKR333DKTSFGGJYIG37VMZCK2OOURUBYYQKK7MVGDL5N2JXO2JFT
+stellar keys generate alice-beneficiary-1 --network testnet --fund
+stellar keys address alice-beneficiary-1 => GDIVVKR333DKTSFGGJYIG37VMZCK2OOURUBYYQKK7MVGDL5N2JXO2JFT
+stellar keys secret alice-beneficiary-1 => SCDNMNZCHLMQ3CQ4JRJF2DOBNDYIRHSPY53CRELG6ZXH2SPECYDXWI6Q
+stellar keys secret alice-beneficiary-1 --phrase => twice frozen cook worry glad choose obey disorder shed antenna zone crystal ticket letter attend arena snack step torch switch light actor brown traffic
+
+stellar keys generate alice-beneficiary-2 --network testnet --fund
+stellar keys address alice-beneficiary-2 => GDD4BFT3YSDHAAKIFXFKNSVLVGGU7NDIOYNTMR7NXJVNOZLCCJOQCUTS
+stellar keys secret alice-beneficiary-2 => SDF2QVPUGVN2U4IL5NDZV6SXBEXQGQWGYGKF2F77Q22DIJS3CEO6N3K3
+stellar keys secret alice-beneficiary-2 --phrase => wonder alone illness carry fever search action youth oval stomach sweet shed almost ocean other sword culture shallow veteran excite level fuel produce elevator
 
 stellar contract alias show contract_address
 
@@ -246,16 +269,40 @@ stellar contract alias show contract_address
         --network testnet \
         -- \
         --admin GCISVJIR6CT6VVYN7AJ5AXMHNPZZMZI4U3CELHYXQW77X4E42AUHC7AM \
-        --token CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC
-
+        --token CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC \
+        --minimum_donation 10000000
 
     stellar contract invoke \
         --id contract_address \
         --source admin \
         --network testnet \
+        -- create_ong \
+        --ong GA76IHDYDMDZE3Q4PPY2YY64SCPYCTFJTWGHDH5LGHIROLV7WU6DFN7M
+
+    stellar contract invoke \
+        --id contract_address \
+        --source admin \
+        --network testnet \
+        -- create_ong \
+        --ong GB2IMTB3E3NTXC6PSAS2AY3NNQ2U32AUQVGSO4B6QSNXPJTQGSL7GBNU
+
+    stellar contract invoke \
+        --id contract_address \
+        --source alice-ong-1 \
+        --network testnet \
         -- create_campaign \
-        --creator GCISVJIR6CT6VVYN7AJ5AXMHNPZZMZI4U3CELHYXQW77X4E42AUHC7AM \
+        --creator GA76IHDYDMDZE3Q4PPY2YY64SCPYCTFJTWGHDH5LGHIROLV7WU6DFN7M \
         --beneficiary GDIVVKR333DKTSFGGJYIG37VMZCK2OOURUBYYQKK7MVGDL5N2JXO2JFT \
+        --goal 100000000 \
+        --min_donation 100000
+
+    stellar contract invoke \
+        --id contract_address \
+        --source alice-ong-2 \
+        --network testnet \
+        -- create_campaign \
+        --creator GB2IMTB3E3NTXC6PSAS2AY3NNQ2U32AUQVGSO4B6QSNXPJTQGSL7GBNU \
+        --beneficiary GDD4BFT3YSDHAAKIFXFKNSVLVGGU7NDIOYNTMR7NXJVNOZLCCJOQCUTS \
         --goal 100000000 \
         --min_donation 100000
 
@@ -272,8 +319,8 @@ stellar contract alias show contract_address
         --network testnet \
         -- contribute \
         --contributor GALX2CBQFDKI32QJMTKLNZSQXR4DX7CEG5DTDGJBLCFEAXQUXM4RKXQZ \
-        --campaign_id 0 \
-        --amount 100000000
+        --campaign_id GDIVVKR333DKTSFGGJYIG37VMZCK2OOURUBYYQKK7MVGDL5N2JXO2JFT \
+        --amount 10000000
 
     stellar contract invoke \
         --id contract_address \

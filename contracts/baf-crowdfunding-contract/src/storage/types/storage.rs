@@ -1,4 +1,4 @@
-use soroban_sdk::{contracttype, Address};
+use soroban_sdk::contracttype;
 
 #[derive(Clone)]
 #[contracttype]
@@ -6,6 +6,7 @@ pub enum DataKey {
     Admin,
     Token,
     Campaigns,
-    NextID,
-    Contribution(u32, Address), // (campaign_address, contributor)
+    Contributors,
+    Ongs,
+    MinimumDonation,
 }

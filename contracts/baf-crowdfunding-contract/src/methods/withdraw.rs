@@ -1,4 +1,4 @@
-use soroban_sdk::Env;
+use soroban_sdk::{Address, Env};
 
 use crate::{
     events,
@@ -9,10 +9,10 @@ use crate::{
     },
 };
 
-pub fn withdraw(env: &Env, campaign_id: u32) -> Result<(), Error> {
+pub fn withdraw(env: &Env, campaign_id: Address) -> Result<(), Error> {
     // creator.require_auth();
 
-    let mut campaign = get_campaign(env, campaign_id)?;
+    let mut campaign = get_campaign(env, campaign_id.clone())?;
 
     let total_raised = campaign.total_raised;
     if campaign.total_raised != campaign.goal {
@@ -27,7 +27,7 @@ pub fn withdraw(env: &Env, campaign_id: u32) -> Result<(), Error> {
     )?;
 
     campaign.executed = true;
-    set_campaign(env, campaign);
+    set_campaign(env, &campaign.beneficiary, &campaign);
 
     //remove_campaign(env, campaign_id);
     events::campaign::withdraw(&env, campaign_id, total_raised);

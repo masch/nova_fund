@@ -16,4 +16,7 @@ pub enum Error {
     ContributionNotFound = 9,
     CampaignAlreadyExists = 10,
     CampaignAlreadyExecuted = 11,
+    OngCannotCreateCampaign = 12,
+    OngNotFound = 13,
+    IncorrectAmount = 14,
 }
