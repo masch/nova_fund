@@ -245,6 +245,10 @@ stellar keys generate alice-ong-2 --network testnet --fund
 stellar keys address alice-ong-2 => GB2IMTB3E3NTXC6PSAS2AY3NNQ2U32AUQVGSO4B6QSNXPJTQGSL7GBNU
 stellar keys secret alice-ong-2 => SBHVJENQ65UPKI56OA6UHIEU36FBGUPOGB3L3O3LWAUYCF2ACZ3IKXSI
 
+stellar keys generate alice-ong-3 --network testnet --fund
+stellar keys address alice-ong-3 => GBA3T3WCRYPWYYG4YACJ5I3EB3JOQIFWQBML6FOK7SP6JWXIH5LJVDRS
+stellar keys secret alice-ong-3 => SAQEJOLBPUDS77TVAX7ZG7KKSQ3FRJGCMOVERBIXTQT2NECBJXMYJJQG
+
 stellar keys generate alice-contributor --network testnet --fund
 stellar keys address alice-contributor => GALX2CBQFDKI32QJMTKLNZSQXR4DX7CEG5DTDGJBLCFEAXQUXM4RKXQZ
 stellar keys secret alice-contributor => SCYCNRP7W6L7EJT6SJ467DUC4OP7KMKMRYHQMOCXFICVHR7WDE77YNNK

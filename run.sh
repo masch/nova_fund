@@ -65,6 +65,20 @@ stellar contract invoke \
     --goal 100000000 \
     --min_donation 100000
 
+
+echo "*****************************************"
+echo -e "\tCreating another campaign for ONG2 ..."
+echo "*****************************************"
+stellar contract invoke \
+    --id contract_address \
+    --source alice-ong-2 \
+    --network testnet \
+    -- create_campaign \
+    --creator GB2IMTB3E3NTXC6PSAS2AY3NNQ2U32AUQVGSO4B6QSNXPJTQGSL7GBNU \
+    --beneficiary GBA3T3WCRYPWYYG4YACJ5I3EB3JOQIFWQBML6FOK7SP6JWXIH5LJVDRS \
+    --goal 100000000 \
+    --min_donation 100000
+
 echo "**********************************************"
 echo -e "\tContributing for ONG1 campaign 1 ..."
 echo "**********************************************"
@@ -137,4 +151,7 @@ stellar contract invoke \
 echo "*************************"
 echo -e "\tContract ID:"
 echo "*************************"
-stellar contract alias show contract_address
+
+CONTRACT_ID=$(stellar contract alias show contract_address)
+EXPLORER_URL="https://stellar.expert/explorer/testnet/contract/$CONTRACT_ID"
+xdg-open "$EXPLORER_URL"
