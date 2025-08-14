@@ -1,10 +1,14 @@
 #!/bin/bash
 #set -e
 
+echo "***************************"
 echo -e "\t*****Building*****..."
+echo "***************************"
 cargo build --target wasm32v1-none --release && stellar contract optimize --wasm target/wasm32v1-none/release/baf_crowdfunding_contract.wasm
 
-echo -e "\tDeploy..."
+echo "*********************"
+echo -e "\tDeploying ..."
+echo "*********************"
 stellar contract deploy \
     --wasm target/wasm32v1-none/release/baf_crowdfunding_contract.optimized.wasm \
     --alias contract_address \
@@ -15,7 +19,9 @@ stellar contract deploy \
     --token CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC \
     --minimum_donation 10000000
 
-echo -e "\tCreate ONG 1..."
+echo "**************************************"
+echo -e "\tCreating ONG 1 ..."
+echo "**************************************"
 stellar contract invoke \
     --id contract_address \
     --source admin \
@@ -23,7 +29,9 @@ stellar contract invoke \
     -- create_ong \
     --ong GA76IHDYDMDZE3Q4PPY2YY64SCPYCTFJTWGHDH5LGHIROLV7WU6DFN7M
 
-echo -e "\tCreate ONG 2..."
+echo "**************************************"
+echo -e "\tCreating ONG 2 ..."
+echo "**************************************"
 stellar contract invoke \
     --id contract_address \
     --source admin \
@@ -31,7 +39,9 @@ stellar contract invoke \
     -- create_ong \
     --ong GB2IMTB3E3NTXC6PSAS2AY3NNQ2U32AUQVGSO4B6QSNXPJTQGSL7GBNU
 
-echo -e "\tCreate campaign for ONG1..."
+echo "*****************************************"
+echo -e "\tCreating campaign for ONG1 ..."
+echo "*****************************************"
 stellar contract invoke \
     --id contract_address \
     --source alice-ong-1 \
@@ -42,7 +52,9 @@ stellar contract invoke \
     --goal 100000000 \
     --min_donation 100000
 
-echo -e "\tCreate campaign for ONG2..."
+echo "*****************************************"
+echo -e "\tCreating campaign for ONG2 ..."
+echo "*****************************************"
 stellar contract invoke \
     --id contract_address \
     --source alice-ong-2 \
@@ -53,8 +65,9 @@ stellar contract invoke \
     --goal 100000000 \
     --min_donation 100000
 
-
-echo -e "\tContribute for ONG1 campaign 1..."
+echo "**********************************************"
+echo -e "\tContributing for ONG1 campaign 1 ..."
+echo "**********************************************"
 stellar contract invoke \
     --id contract_address \
     --source alice-contributor \
@@ -64,8 +77,21 @@ stellar contract invoke \
     --campaign_id GDIVVKR333DKTSFGGJYIG37VMZCK2OOURUBYYQKK7MVGDL5N2JXO2JFT \
     --amount 10000000
 
+echo "****************************************************"
+echo -e "\tAnother contributing for ONG1 campaign 1 ..."
+echo "****************************************************"
+stellar contract invoke \
+    --id contract_address \
+    --source alice-contributor \
+    --network testnet \
+    -- contribute \
+    --contributor GALX2CBQFDKI32QJMTKLNZSQXR4DX7CEG5DTDGJBLCFEAXQUXM4RKXQZ \
+    --campaign_id GDIVVKR333DKTSFGGJYIG37VMZCK2OOURUBYYQKK7MVGDL5N2JXO2JFT \
+    --amount 20000000
 
-echo -e "\tContribute for ONG2 campaign 2..."
+echo "**********************************************"
+echo -e "\tContributing for ONG2 campaign 2 ..."
+echo "**********************************************"
 stellar contract invoke \
     --id contract_address \
     --source alice-contributor \
@@ -76,7 +102,9 @@ stellar contract invoke \
     --amount 100000000
 
 
-echo -e "\tWithdraw for ONG1 campaign 1 => Goal NOT reached..."
+echo "****************************************************************"
+echo -e "\tWithdrawing for ONG1 campaign 1 => Goal NOT reached ..."
+echo "****************************************************************"
 stellar contract invoke \
     --id contract_address \
     --source alice-beneficiary \
@@ -84,8 +112,9 @@ stellar contract invoke \
     -- withdraw \
     --campaign_id GDIVVKR333DKTSFGGJYIG37VMZCK2OOURUBYYQKK7MVGDL5N2JXO2JFT
 
-
-echo -e "\tWithdraw for ONG2 campaign 2 => Goal reached..."
+echo "*************************************************************"
+echo -e "\tWithdrawing for ONG2 campaign 2 => Goal reached ..."
+echo "*************************************************************"
 stellar contract invoke \
     --id contract_address \
     --source alice-beneficiary \
@@ -93,8 +122,9 @@ stellar contract invoke \
     -- withdraw \
     --campaign_id GDD4BFT3YSDHAAKIFXFKNSVLVGGU7NDIOYNTMR7NXJVNOZLCCJOQCUTS
 
-
-echo -e "\Refund for ONG1 campaign 1..."
+echo "**********************************************"
+echo -e "\tRefunding for ONG1 campaign 1 ..."
+echo "**********************************************"
 stellar contract invoke \
     --id contract_address \
     --source alice-contributor \
@@ -104,5 +134,7 @@ stellar contract invoke \
     --campaign_id GDIVVKR333DKTSFGGJYIG37VMZCK2OOURUBYYQKK7MVGDL5N2JXO2JFT
 
 
+echo "*************************"
 echo -e "\tContract ID:"
+echo "*************************"
 stellar contract alias show contract_address

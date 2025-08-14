@@ -73,3 +73,32 @@ pub(crate) fn get_ong_by_address_and_increment_ong_campaigns(
     // 6. Return the updated Ong struct
     Ok(ong)
 }
+
+pub(crate) fn add_increment_ong_balance(
+    env: &Env,
+    address: &Address,
+    amount: i128,
+) -> Result<Ong, Error> {
+    // 1. Get the map of all ONGs from storage
+    let mut ongs: Map<Address, Ong> = env
+        .storage()
+        .persistent()
+        .get(&ONGS)
+        .unwrap_or_else(|| Map::new(env));
+
+    // 2. Get the specific ONG by its address, returning an error if not found.
+    // The `?` operator handles the error case for you.
+    let mut ong = ongs.get(address.clone()).ok_or(Error::OngNotFound)?;
+
+    // 3. Modify the struct. Here we increment the total_campaigns counter.
+    ong.balance += amount;
+
+    // 4. Put the modified struct back into the map, using the same key.
+    ongs.set(address.clone(), ong.clone());
+
+    // 5. Save the entire updated map back to persistent storage.
+    env.storage().persistent().set(&ONGS, &ongs);
+
+    // 6. Return the updated Ong struct
+    Ok(ong)
+}

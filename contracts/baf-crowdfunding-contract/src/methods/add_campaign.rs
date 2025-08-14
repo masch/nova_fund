@@ -36,6 +36,7 @@ pub fn add_campaign(
         beneficiary,
         executed: false,
         contributors: Map::new(env),
+        ong: creator.clone(),
     };
 
     new_campaign(&env, campaign.clone());

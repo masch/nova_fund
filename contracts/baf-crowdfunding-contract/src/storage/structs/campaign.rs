@@ -8,7 +8,7 @@ pub struct Campaign {
     pub min_donation: i128,
     pub total_raised: i128,
     pub supporters: u32,
-    // pub id: u32,
+    pub ong: Address,
     pub executed: bool,
     pub contributors: Map<Address, i128>,
 }

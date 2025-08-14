@@ -1,9 +1,10 @@
 use crate::{
     events,
-    methods::math::checked_addition,
+    methods::math::{checked_addition, checked_amount},
     methods::token::token_transfer,
     storage::{
         campaign::{get_campaign, set_campaign},
+        ong::add_increment_ong_balance,
         types::error::Error,
     },
 };
@@ -17,23 +18,27 @@ pub fn contribute(
 ) -> Result<(), Error> {
     contributor.require_auth();
 
-    if amount <= 0 {
-        return Err(Error::AmountMustBePositive);
-    }
+    let amount_validated = checked_amount(env, amount)?;
 
     let mut campaign = get_campaign(env, campaign_id.clone())?;
-    if campaign.min_donation > amount {
+    if campaign.min_donation > amount_validated {
         return Err(Error::ContributionBelowMinimum);
     }
 
-    if checked_addition(campaign.total_raised, amount)? > campaign.goal {
+    let new_contribution_amount = checked_addition(campaign.total_raised, amount_validated)?;
+    if new_contribution_amount > campaign.goal {
         return Err(Error::CampaignGoalExceeded);
     }
 
-    token_transfer(&env, &contributor, &env.current_contract_address(), &amount)?;
+    token_transfer(
+        &env,
+        &contributor.clone(),
+        &env.current_contract_address(),
+        &amount_validated,
+    )?;
 
     // Update campaign state
-    campaign.total_raised = checked_addition(campaign.total_raised, amount)?;
+    campaign.total_raised = new_contribution_amount;
 
     // Update contributor's total contribution
     let current_contribution = campaign.contributors.get(contributor.clone()).unwrap_or(0);
@@ -43,13 +48,15 @@ pub fn contribute(
             .try_into()
             .unwrap();
     }
-    let new_contribution = checked_addition(current_contribution, amount)?;
+    let new_contribution = checked_addition(current_contribution, amount_validated)?;
     campaign
         .contributors
         .set(contributor.clone(), new_contribution);
 
     // Save the updated campaign
     set_campaign(env, &campaign_id, &campaign);
+
+    add_increment_ong_balance(&env, &campaign.ong, amount_validated)?;
 
     events::contribute::add_contribute(&env, &contributor, &campaign_id, &amount);
 
