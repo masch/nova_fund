@@ -3,7 +3,7 @@ use soroban_sdk::{Address, Env, Map};
 use crate::{
     events,
     storage::{
-        admin::get_admin, campaign::exist_campaign, campaign::new_campaign, ong::exist_ong,
+        campaign::exist_campaign, campaign::new_campaign, ong::exist_ong,
         ong::get_ong_by_address_and_increment_ong_campaigns, structs::campaign::Campaign,
         types::error::Error,
     },
@@ -33,7 +33,6 @@ pub fn add_campaign(
         min_donation,
         total_raised: 0,
         supporters: 0,
-        // id: ong.total_campaigns,
         beneficiary,
         executed: false,
         contributors: Map::new(env),

@@ -1,6 +1,6 @@
 use crate::{
     events,
-    methods::math::{checked_addition, checked_amount},
+    methods::math::checked_addition,
     methods::token::token_transfer,
     storage::{
         campaign::{get_campaign, set_campaign},

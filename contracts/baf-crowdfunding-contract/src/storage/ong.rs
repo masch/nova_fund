@@ -36,15 +36,15 @@ pub(crate) fn exist_ong(env: &Env, address: Address) -> bool {
     ongs.contains_key(address.clone())
 }
 
-pub(crate) fn get_ong_by_address(env: &Env, address: Address) -> Result<Ong, Error> {
-    let ongs: Map<Address, Ong> = env
-        .storage()
-        .persistent()
-        .get(&ONGS)
-        .unwrap_or_else(|| Map::new(env));
+// pub(crate) fn get_ong_by_address(env: &Env, address: Address) -> Result<Ong, Error> {
+//     let ongs: Map<Address, Ong> = env
+//         .storage()
+//         .persistent()
+//         .get(&ONGS)
+//         .unwrap_or_else(|| Map::new(env));
 
-    ongs.get(address.clone()).ok_or(Error::OngNotFound)
-}
+//     ongs.get(address.clone()).ok_or(Error::OngNotFound)
+// }
 
 pub(crate) fn get_ong_by_address_and_increment_ong_campaigns(
     env: &Env,

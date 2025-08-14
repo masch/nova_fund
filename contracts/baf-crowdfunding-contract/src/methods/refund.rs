@@ -5,7 +5,6 @@ use crate::{
     methods::token::token_transfer,
     storage::{
         campaign::{get_campaign, set_campaign},
-        contribution::{get_contribution, has_contribution, remove_contribution},
         types::error::Error,
     },
 };
@@ -13,25 +12,31 @@ use crate::{
 pub fn refund(env: &Env, contributor: Address, campaign_id: Address) -> Result<(), Error> {
     contributor.require_auth();
 
-    let mut campaign = get_campaign(env, campaign_id)?;
-    /*
-        if !has_contribution(env, campaign_id, &contributor) {
-            return Err(Error::ContributionNotFound);
-        }
+    let mut campaign = get_campaign(env, campaign_id.clone())?;
 
-        if campaign.executed {
-            return Err(Error::CampaignAlreadyExecuted);
-        }
+    if campaign.executed {
+        return Err(Error::CampaignAlreadyExecuted);
+    }
 
-        let amount = get_contribution(env, campaign_id, &contributor);
-        token_transfer(&env, &env.current_contract_address(), &contributor, &amount)?;
+    let current_contribution = campaign.contributors.get(contributor.clone()).unwrap_or(0);
+    if current_contribution == 0 {
+        return Err(Error::ContributionNotFound);
+    }
 
-        campaign.total_raised -= amount;
-        campaign.supporters -= 1;
+    //let amount = get_contribution(env, campaign_id, &contributor);
+    token_transfer(
+        &env,
+        &env.current_contract_address(),
+        &contributor,
+        &current_contribution,
+    )?;
 
-        remove_contribution(env, campaign_id, &contributor);
-        set_campaign(env, campaign);
-        events::refund::refund(&env, &contributor, campaign_id, &amount);
-    */
+    campaign.total_raised -= current_contribution;
+    campaign.supporters -= 1;
+
+    //remove_contribution(env, campaign_id, &contributor);
+    set_campaign(env, &campaign_id, &campaign);
+    events::refund::refund(&env, &contributor, campaign_id, &current_contribution);
+
     Ok(())
 }

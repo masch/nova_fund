@@ -1,11 +1,6 @@
-use core::ops::Add;
+use soroban_sdk::{Address, Env, Map};
 
-use soroban_sdk::{Address, Env, Map, Vec};
-
-use crate::{
-    events::campaign,
-    storage::{structs::campaign::Campaign, structs::ong::Ong, types::error::Error},
-};
+use crate::storage::{structs::campaign::Campaign, types::error::Error};
 
 use super::types::storage::DataKey;
 

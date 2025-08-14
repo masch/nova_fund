@@ -1,5 +1,4 @@
-use crate::storage::structs::campaign::Campaign;
-use soroban_sdk::{contracttype, Address, Map};
+use soroban_sdk::contracttype;
 
 #[derive(Clone)]
 #[contracttype]

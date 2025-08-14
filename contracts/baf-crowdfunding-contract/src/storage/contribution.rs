@@ -1,35 +1,41 @@
-use soroban_sdk::{Address, Env, Map};
+//use super::types::storage::DataKey;
 
-use super::types::storage::DataKey;
+// const CONTRIBUTORS: DataKey = DataKey::Contributors;
 
-const CONTRIBUTORS: DataKey = DataKey::Contributors;
+// pub(crate) fn has_contribution(env: &Env, contributor: Address, contributor: &Address) {
+//     let contributors: Map<Address, i128> = env
+//         .storage()
+//         .persistent()
+//         .get(&CONTRIBUTORS)
+//         .unwrap_or_else(|| Map::new(env));
 
-pub(crate) fn has_contribution(env: &Env, campaign_id: u32, contributor: &Address) {
-    // let key = DataKey::Contribution(campaign_id, contributor.clone());
+//     contributors.contains_key(contributor.clone())
 
-    // env.storage().instance().has(&key)
-}
+//     // let key = DataKey::Contribution(campaign_id, contributor.clone());
 
-pub(crate) fn add_contribution(env: &Env, contributor: &Address, amount: i128) {
-    let mut contributors: Map<Address, i128> = env
-        .storage()
-        .persistent()
-        .get(&CONTRIBUTORS)
-        .unwrap_or_else(|| Map::new(env));
+//     // env.storage().instance().has(&key)
+// }
 
-    // 1. Get the current contributed amount for the address, defaulting to 0 if not present.
-    let current_amount = contributors.get(contributor.clone()).unwrap_or(0);
+// pub(crate) fn add_contribution(env: &Env, contributor: &Address, amount: i128) {
+//     let mut contributors: Map<Address, i128> = env
+//         .storage()
+//         .persistent()
+//         .get(&CONTRIBUTORS)
+//         .unwrap_or_else(|| Map::new(env));
 
-    // 2. Calculate the new total amount.
-    let new_total_amount = current_amount + amount;
+//     // 1. Get the current contributed amount for the address, defaulting to 0 if not present.
+//     let current_amount = contributors.get(contributor.clone()).unwrap_or(0);
 
-    // 3. Update the map with the new total amount for the contributor.
-    contributors.set(contributor.clone(), new_total_amount);
+//     // 2. Calculate the new total amount.
+//     let new_total_amount = current_amount + amount;
 
-    // 4. Save the updated map back to storage.
-    env.storage().persistent().set(&CONTRIBUTORS, &contributors);
-}
+//     // 3. Update the map with the new total amount for the contributor.
+//     contributors.set(contributor.clone(), new_total_amount);
 
+//     // 4. Save the updated map back to storage.
+//     env.storage().persistent().set(&CONTRIBUTORS, &contributors);
+// }
+/*
 pub(crate) fn get_contribution(env: &Env, campaign_id: u32, contributor: &Address) -> i128 {
     // let key = DataKey::Contribution(campaign_id, contributor.clone());
 
@@ -42,3 +48,4 @@ pub(crate) fn remove_contribution(env: &Env, campaign_id: u32, contributor: &Add
 
     // env.storage().instance().remove(&key);
 }
+ */
